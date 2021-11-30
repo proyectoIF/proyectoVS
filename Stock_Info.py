@@ -101,13 +101,15 @@ def stock_info (assets, momentum):
     df = YahooData(df_prices,assets,start,today)
 
     print("IMPORTED PRICES:\n----------------------------------------------\n")
-    print(df.head(10),"\n...", df.tail(10))
+    print(df.head(5),"\n...", df.tail(5))
     print("\n----------------------------------------------\n")
 
     df = np.log(df).diff() #diff() y dropna() porque no son intepretados por intellisense???
 
+    df = df.dropna()
+
     print("CALCULATED LOGARITHMIC RETURNS:\n----------------------------------------------\n")
-    print(df.head(10),"\n...", df.tail(10))
+    print(df.head(5),"\n...", df.tail(5))
     print("\n----------------------------------------------\n")
 
-    return df.dropna()
+    return df

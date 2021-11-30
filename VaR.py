@@ -19,13 +19,34 @@ Pasos para la implementacion del Value at Risk del portafolio de activos:
 import pandas as pd
 import numpy as np
 import Stock_Info
+from scipy.stats import norm
 
 
-
-def portfolioVaR(df_daily_covar):
+def portfolioVaR(df_daily, momentum):
     
     #importa los datos del portafolio de mercado:
     assets = ["^GSPC"]
-    momentum = len(df_daily_covar.index)
     df_Mkt_rets = Stock_Info.stock_info(assets,momentum)
+    sigmaMkt = np.sqrt(df_Mkt_rets.var())
+    covariances = []
+    pairs = pd.DataFrame()
+    for column in df_daily:
+        #calcula la covarianza entre el activo y el mercado
+        pairs= pd.concat([df_Mkt_rets,df_daily[column]],axis =1)
+        covariances.append(pairs.cov().at["^GSPC",column])
+
+    
+    #calcula los betas de cada activo:
+    betas = []
+    for i in range(len(covariances)):
+        betas.append(covariances[i]/(sigmaMkt**2))
+    
+    VaRs = []
+    for i in range(len(covariances)):
+        VaRs.append(norm.ppf(0.95)*betas[i]*sigmaMkt)
+    
+    return VaRs
+
+
+
 

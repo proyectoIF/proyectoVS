@@ -22,7 +22,7 @@
  *      Andrés F. Vergara (af.vergarar@uniandes.edu.co)
  *
  """
-
+import VaR as var
 import Stock_Info as info
 import Min_Risk_Long_Portfolio as min_risk
 import Merton_Robert_Portfolio as merton_robert
@@ -79,3 +79,12 @@ def mertonRobertPorfolio(stock_info, expected_return):
     https://www.jstor.org/stable/2329621?origin=JSTOR-pdf
     """
     return merton_robert.Menton_Robert_Porfolio(stock_info, expected_return)
+
+
+# ___________________________________________________
+#  VaR function
+# ___________________________________________________
+
+def calculatePortfolioVar(stock_info, momentum):
+
+    return var.portfolioVaR(stock_info,momentum)

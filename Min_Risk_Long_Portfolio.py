@@ -72,6 +72,7 @@ def optimal_long_portfolio(df, expected_return, min_bound, max_bound):
 def optimal_long_short_portfolio(df, expected_return):
 
     stock_return = df.mean()*252
+
     df_cov = df.cov()*252
 
     model = gp.Model('Best Portfolio')

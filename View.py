@@ -83,6 +83,9 @@ def optionOne():
 
     model, stock_return = Controller.longPortfolio(stock_info, expected_return, min_bound, max_bound)
 
+    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
+    printVar(vars)
+
     if model.status == GRB.OPTIMAL:
 
         variables = {v.varName : round(v.x, 4) for v in model.getVars()}
@@ -110,6 +113,9 @@ def optionTwo():
 
     model, stock_return = Controller.longShortPortfolio(stock_info, expected_return)
 
+    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
+    printVar(vars)
+
     if model.status == GRB.OPTIMAL:
 
         variables = {v.varName : round(v.x, 4) for v in model.getVars()}
@@ -136,9 +142,16 @@ def optionThree():
 
     weights, risk = Controller.mertonRobertPorfolio(stock_info, stock_returns)
 
+    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
+    printVar(vars)
+
     print(weights)
     print()
     print(risk)
+
+def printVar(vars):
+
+    print("VaR:",vars)
 
 
 # ___________________________________________________
