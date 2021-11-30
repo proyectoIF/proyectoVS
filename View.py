@@ -57,11 +57,6 @@ expected_return = None
 min_bound = None
 max_bound = None
 
-# Merton Robert
-
-stock_returns = 0.36
-
-
 # ___________________________________________________
 #  Principal Menu and interaction with the user.
 # ___________________________________________________
@@ -74,7 +69,6 @@ def printMenu():
 
     print("1- Long Portfolio")
     print("2- Long Short Portfolio")
-    print("3- Merton Robert Portfolio")
     print("0- Salir")
     print("\n*******************************************\n")
 
@@ -138,17 +132,6 @@ def optionTwo():
         print("No optimal solution with those constrains.")
         print('\n-------------------------------\n')
 
-def optionThree():
-
-    weights, risk = Controller.mertonRobertPorfolio(stock_info, stock_returns)
-
-    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
-    printVar(vars)
-
-    print(weights)
-    print()
-    print(risk)
-
 def printVar(vars):
 
     print("VaR:",vars)
@@ -169,10 +152,6 @@ while True:
 
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
-        print("Tiempo de ejecución: " + str(executiontime))
-
-    elif int(inputs[0]) == 3:
-        executiontime = timeit.timeit(optionThree, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
     else:

@@ -25,7 +25,6 @@
 import VaR as var
 import Stock_Info as info
 import Min_Risk_Long_Portfolio as min_risk
-import Merton_Robert_Portfolio as merton_robert
 
 
 # ___________________________________________________
@@ -72,14 +71,6 @@ def longShortPortfolio(stock_info, expected_return):
     model.optimize()
 
     return model, stock_return
-
-
-def mertonRobertPorfolio(stock_info, expected_return):
-    """
-    https://www.jstor.org/stable/2329621?origin=JSTOR-pdf
-    """
-    return merton_robert.Menton_Robert_Porfolio(stock_info, expected_return)
-
 
 # ___________________________________________________
 #  VaR function
