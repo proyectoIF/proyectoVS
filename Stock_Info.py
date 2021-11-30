@@ -95,8 +95,8 @@ def stock_info (assets, momentum):
     start = (datetime.today() - timedelta(days = momentum)).strftime('%Y-%m-%d')
     today = datetime.today().strftime('%Y-%m-%d')
     df_prices = pd.DataFrame()
-    print("START:",start)
-    print("TODAY:",today)
+    print("FROM:",start)
+    print("TO:",today)
 
     df = YahooData(df_prices,assets,start,today)
 
