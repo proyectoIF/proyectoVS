@@ -29,6 +29,8 @@ import Controller
 import numpy as np
 from gurobipy import GRB
 
+
+
 # ___________________________________________________
 #  Variables and stock info retrieval
 # ___________________________________________________
@@ -43,13 +45,7 @@ retrive_csv_info = False
 
 # ... Automatic API
 
-assets = ["AAPL", "AMZN", "CHPT"]
-momentum_days = 365*2
-
-# ... Retrieve information of the assets from the specified source.
-
-stock_info = Controller.init(calc_log_return, retrive_csv_info, assets, momentum_days)
-stock_info.to_csv('Portafolio.csv', sep=';', index=False)
+assets = []
 
 # Optimizer parameters.
 
@@ -71,7 +67,6 @@ def printMenu():
     print("2- Long Short Portfolio")
     print("0- Salir")
     print("\n*******************************************\n")
-
 
 def optionOne():
 
@@ -143,9 +138,23 @@ def printVar(vars):
 
 while True:
 
-    printMenu()
-    inputs = input('Seleccione una opción para continuar\n>')
     
+    n=int(input("Ingrese el número de activos que conforman el portafolio"))
+    for i in range(n):
+        ticker=str(input("Ingrese el ticker del activo "))
+        assets.append(ticker)
+    
+    # ... Retrieve information of the assets from the specified source.
+
+    momentum_days=int(input("Ingrese cuantos años de información desea descargar: "))
+    momentum_days=momentum_days*252
+
+    stock_info = Controller.init(calc_log_return, retrive_csv_info, assets, momentum_days)
+    stock_info.to_csv('Portafolio.csv', sep=';', index=False)
+
+    printMenu() 
+    inputs = input('Seleccione una opción para continuar\n>')
+
     if int(inputs[0]) == 1:
         executiontime = timeit.timeit(optionOne, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
