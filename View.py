@@ -44,7 +44,7 @@ calc_log_return = False
 retrive_csv_info = False
 
 # ... Automatic API
-
+momentum_days=2*365
 assets = []
 
 # Optimizer parameters.
@@ -138,19 +138,32 @@ def printVar(vars):
 
 while True:
 
-    
-    n=int(input("Ingrese el número de activos que conforman el portafolio"))
-    for i in range(n):
-        ticker=str(input("Ingrese el ticker del activo "))
-        assets.append(ticker)
-    
+    n= input("Desea cargar la informacion de Yahoo o del archivo generado 'Portafolio.csv'? 1: Yahoo, 0: Portafolio.csv. \n Si desea salir de la aplicacion escriba: EXIT\n>")
+
+    if n =="EXIT":
+        sys.exit(0)
+    elif int(n)==1:
+        generateCsv = True
+        retrive_csv_info = False
+        n=int(input("Ingrese el número de activos que conforman el portafolio"))
+        for i in range(n):
+            ticker=str(input("Ingrese el ticker del activo "))
+            assets.append(ticker)
+    else:
+        retrive_csv_info = True
+        generateCsv = False
+
     # ... Retrieve information of the assets from the specified source.
 
-    momentum_days=int(input("Ingrese cuantos años de información desea descargar: "))
-    momentum_days=momentum_days*252
+    momentum=input("Ingrese cuantos años de información desea descargar, o Enter si desea el default de 2 annos.")
+    if momentum:
+         momentum_days =int(momentum)*365
 
     stock_info = Controller.init(calc_log_return, retrive_csv_info, assets, momentum_days)
-    stock_info.to_csv('Portafolio.csv', sep=';', index=False)
+
+    #Carga la informacion en un .csv para no tener que estar descargando de Yahoo cada vez en las pruebas de funcionalidad.
+    if generateCsv:
+        stock_info.to_csv('Portafolio.csv', sep=';', index=False)
 
     printMenu() 
     inputs = input('Seleccione una opción para continuar\n>')
