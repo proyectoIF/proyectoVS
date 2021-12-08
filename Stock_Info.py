@@ -54,7 +54,7 @@ def define_path_mps(file):
 
 def get_info(csv_separator):
     '''
-    Reads assets info form a csv file named Portafolio into a pandas dataframe object.
+    Reads assets info from a csv file named Portafolio into a pandas dataframe object.
     It assumes the information being read contains the logarithmic returns of the desired assets.
     '''
     path = define_path_mps('Portafolio')
