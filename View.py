@@ -31,6 +31,10 @@ from gurobipy import GRB
 import pandas as pd
 import Stock_Info as stocks
 import matplotlib.pyplot as plt
+from arch import arch_model
+
+
+
 # ___________________________________________________
 #  Variables and stock info retrieval
 # ___________________________________________________
@@ -78,14 +82,25 @@ def GBM (miu,sigma,pesos):
         simulacion[:,i]=simulacion[:,i-1] * (np.exp((miu-0.5*sigma**2)*dt+sigma*e[:,i-1]*np.sqrt(dt)))
 
     simulacion=pd.DataFrame(np.transpose(simulacion))
-    print(simulacion)
     plt.plot(simulacion)
     plt.xlabel('Steps')
     plt.ylabel('Stock Price')
     plt.title("Porfolio Price Simulation")
     plt.show()
 
+def GARCH():
+    retornos =stocks.stock_info(assets,momentum_days)
+    for i in range(len(assets)):
+        lista=[]
+        lista.append( retornos.iloc[:,i])
+        garch = arch_model(lista, vol='garch', p=1, o=0, q=1)
+        garch_fitted = garch.fit()
+        plt.plot(garch_fitted.conditional_volatility)
+        plt.title("Volatilidad "+ str(assets[i]))
+        plt.show()
+        print(garch_fitted.summary())
     
+
 
 def printMenu():
 
@@ -122,7 +137,7 @@ def optionOne():
         x= int(input("Desea ver el GBM? Si: 1  No:0 "))
         if x==1:
             print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
-        
+            print(GARCH())
     else:
 
         print('\n-------------------------------\n')
@@ -156,6 +171,7 @@ def optionTwo():
         x= int(input("Desea ver el GBM? Si: 1  No:0 "))
         if x==1:
             print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
+            
 
     else:
 
