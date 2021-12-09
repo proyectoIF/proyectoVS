@@ -114,10 +114,10 @@ def stock_info (assets, momentum):
 
     return df
 
-def PreciosSpot(assets, momentum):
+def PreciosSpot(assets):
     
-    today = datetime.today().strftime('%Y-%m-%d')
+    start = (datetime.today()).strftime('%Y-%m-%d')
     df_prices = pd.DataFrame()
-    df = YahooData(df_prices,assets,today,today)
+    df = YahooData(df_prices,assets,start,start)
 
     return df

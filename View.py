@@ -28,9 +28,9 @@ import timeit
 import Controller
 import numpy as np
 from gurobipy import GRB
-
-
-
+import pandas as pd
+import Stock_Info as stocks
+import matplotlib.pyplot as plt
 # ___________________________________________________
 #  Variables and stock info retrieval
 # ___________________________________________________
@@ -57,6 +57,35 @@ max_bound = None
 #  Principal Menu and interaction with the user.
 # ___________________________________________________
 
+def GBM (miu,sigma,pesos): 
+
+    num_dias=int(input("Cuantos años desea simular: "))*252
+    lista=[]
+    miu=miu+0.5*pow(sigma,2)
+    simulacion=np.zeros((100,num_dias))
+    asset=stocks.PreciosSpot(assets)
+    for i in range(len(assets)):
+        lista.append( asset.iat[0,i])
+    s0=(np.dot(lista,pesos))
+    dt=1/num_dias
+    
+    simulacion[:,0]=s0
+    e=np.zeros((100,num_dias))
+    for i in range(100):
+        for j in range(num_dias):
+            e[i][j]=np.random.standard_normal()
+    for i in range(1,num_dias):
+        simulacion[:,i]=simulacion[:,i-1] * (np.exp((miu-0.5*sigma**2)*dt+sigma*e[:,i-1]*np.sqrt(dt)))
+
+    simulacion=pd.DataFrame(np.transpose(simulacion))
+    print(simulacion)
+    plt.plot(simulacion)
+    plt.xlabel('Steps')
+    plt.ylabel('Stock Price')
+    plt.title("Porfolio Price Simulation")
+    plt.show()
+
+    
 
 def printMenu():
 
@@ -74,7 +103,6 @@ def optionOne():
 
     vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
     printVar(vars)
-
     if model.status == GRB.OPTIMAL:
 
         variables = {v.varName : round(v.x, 4) for v in model.getVars()}
@@ -84,13 +112,17 @@ def optionOne():
 
         print("La volatilidad del portafolio optimo es:" + " " + str(round(np.sqrt(model.objVal)*100,3))+"%")
         print('El retorno anual del portafolio optimo es:' + ' ' + str(round(np.sum(wight_stocks*stock_return)*100,3)) + '%\n')
-
         print('Los pesos son: \n')
         for i, value in variables.items():
             print('\t', i, value)
+        
 
         print('\n-------------------------------\n')
-
+        
+        x= int(input("Desea ver el GBM? Si: 1  No:0 "))
+        if x==1:
+            print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
+        
     else:
 
         print('\n-------------------------------\n')
@@ -120,6 +152,10 @@ def optionTwo():
             print('\t', i, value)
 
         print('\n-------------------------------\n')
+
+        x= int(input("Desea ver el GBM? Si: 1  No:0 "))
+        if x==1:
+            print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
 
     else:
 
@@ -160,7 +196,6 @@ while True:
          momentum_days =int(momentum)*365
 
     stock_info = Controller.init(calc_log_return, retrive_csv_info, assets, momentum_days)
-
     #Carga la informacion en un .csv para no tener que estar descargando de Yahoo cada vez en las pruebas de funcionalidad.
     if generateCsv:
         stock_info.to_csv('Portafolio.csv', sep=';', index=False)
@@ -171,11 +206,12 @@ while True:
     if int(inputs[0]) == 1:
         executiontime = timeit.timeit(optionOne, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
-
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 
+
     else:
         sys.exit(0)
         
+
