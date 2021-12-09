@@ -134,7 +134,7 @@ def optionOne():
 
         print('\n-------------------------------\n')
         
-        x= int(input("Desea ver el GBM? Si: 1  No:0 "))
+        x= int(input("Desea ver el GBM y modelo GARCH de cada activo? Si: 1  No:0 "))
         if x==1:
             print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
             print(GARCH())
@@ -168,7 +168,7 @@ def optionTwo():
 
         print('\n-------------------------------\n')
 
-        x= int(input("Desea ver el GBM? Si: 1  No:0 "))
+        x= int(input("Desea ver el GBM y modelo GARCH de cada activo? Si: 1  No:0 "))
         if x==1:
             print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
             print(GARCH())
