@@ -171,7 +171,7 @@ def optionTwo():
         x= int(input("Desea ver el GBM? Si: 1  No:0 "))
         if x==1:
             print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
-            
+            print(GARCH())
 
     else:
 
