@@ -50,7 +50,7 @@ def get_info(csv_separator):
     It assumes the information being read contains the logarithmic returns of the desired assets.
     '''
     path = define_path_mps('Portafolio')
-    return pd.read_csv(path, sep = csv_separator,index_col = 0)
+    return pd.read_csv(path, sep = csv_separator,index_col = None)
 
 def get_log_info(csv_separator):
     '''
@@ -59,7 +59,7 @@ def get_log_info(csv_separator):
     '''
 
     path = define_path_mps('Portafolio')
-    df =  pd.read_csv(path, sep = csv_separator,index_col = 0)
+    df =  pd.read_csv(path, sep = csv_separator,index_col = None)
 
     df = np.log(df).diff()
     df = df.dropna()

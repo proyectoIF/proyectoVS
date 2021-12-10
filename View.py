@@ -70,6 +70,7 @@ def optionOne():
 
     vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
     printVar(vars)
+
     if model.status == GRB.OPTIMAL:
 
         variables = {v.varName : round(v.x, 4) for v in model.getVars()}
@@ -192,12 +193,16 @@ def GARCH():
 
 while True:
 
-    n= input("Desea cargar la informacion de Yahoo o del archivo generado 'Portafolio.csv'? 1: Yahoo, 0: Portafolio.csv. \n Si desea salir de la aplicacion escriba: EXIT\n> ")
+    n = input("Desea cargar la informacion de Yahoo o del archivo generado 'Portafolio.csv'? 1: Yahoo, 0: Portafolio.csv. \n Si desea salir de la aplicacion escriba: EXIT\n> ")
 
     if n =="EXIT" or n=="exit":
         sys.exit(0)
     
     elif int(n)==1:
+        momentum = input("Ingrese cuantos años de información desea descargar, o Enter si desea el default de 2 annos. ")
+        if momentum:
+            momentum_days =int(momentum)*365
+        
         generateCsv = True
         retrive_csv_info = False
         n=int(input("Ingrese el número de activos que conforman el portafolio: "))
@@ -210,11 +215,8 @@ while True:
 
     # ... Retrieve information of the assets from the specified source.
 
-    momentum=input("Ingrese cuantos años de información desea descargar, o Enter si desea el default de 2 annos. ")
-    if momentum:
-         momentum_days =int(momentum)*365
-
     stock_info = Controller.init(calc_log_return, retrive_csv_info, assets, momentum_days)
+    
     #Carga la informacion en un .csv para no tener que estar descargando de Yahoo cada vez en las pruebas de funcionalidad.
     if generateCsv:
         stock_info.to_csv('Portafolio.csv', sep=';', index=False)

@@ -28,7 +28,6 @@ def portfolioVaR(df_daily: DataFrame, momentum: int):
     
     #importa los datos del portafolio de mercado:
     # 2.1
-    
     assets = ["^GSPC"]
     df_Mkt_rets = Stock_Info.stock_info(assets,momentum)
     sigmaMkt = np.sqrt(df_Mkt_rets.var())[0]
@@ -40,13 +39,13 @@ def portfolioVaR(df_daily: DataFrame, momentum: int):
     for column in df_daily:
         pairs= pd.concat([df_Mkt_rets,df_daily[column]],axis =1)
         covariances.append(pairs.cov().at["^GSPC",column])
-    
+
     # 2.3 Calcula los betas de cada activo:
 
     betas = []
     for i in range(len(covariances)):
         betas.append(covariances[i]/(sigmaMkt**2))
-    
+
     # 2.4 Queda expresado en porcentaje...
 
     VaRs = []
@@ -54,12 +53,12 @@ def portfolioVaR(df_daily: DataFrame, momentum: int):
         VaRs.append(norm.ppf(0.95)*betas[i]*sigmaMkt)
     
     VaRs = pd.DataFrame(VaRs, index=df_daily.columns)
-    
+
     # 1.0 definir la matriz var-covar de los activos
 
     varCovar = pd.DataFrame()
     varCovar = df_daily.cov()
-    
+
     # 3.0 Calcular la matriz de correlaciones a partir de la matriz de varianzas y covarianzas.
 
     # 3.1. Calcular la matriz diagonal de var-covar y realizar la siguiente operacion: sigmas = inverse(sqrt(Diag(var-covar)))

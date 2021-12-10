@@ -20,7 +20,6 @@
 import VaR as var
 import Stock_Info as info
 import Min_Risk_Long_Portfolio as min_risk
-# import GBM as geometrico
 
 
 # ___________________________________________________
@@ -75,6 +74,3 @@ def longShortPortfolio(stock_info, expected_return):
 def calculatePortfolioVar(stock_info, momentum):
 
     return var.portfolioVaR(stock_info,momentum)
-
-# def GBM (num_dias,miu,sigma,s0):
-#     return geometrico.model (num_dias,miu,sigma,s0)
