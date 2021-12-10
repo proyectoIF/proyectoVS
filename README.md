@@ -1,5 +1,5 @@
 # Proyecto final para el curso de Ingenieria Financiera.
-# septimo semestre de Ingenieria Industrial.
+# Septimo semestre de Ingenieria Industrial.
 
 # Sobre este proyecto:
 
