@@ -14,13 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Contribution:
- *      
- *      Santiago Bobadilla (s.bobadilla@uniandes.edu.co)
- *      Daniel Zea (d.zea@uniandes.edu.co)
- *      Juan A. Jaramillo (ja.jaramillop@uniandes.edu.co)
- *      Andrés F. Vergara (af.vergarar@uniandes.edu.co)
- *
  """
 
 import sys
@@ -60,6 +53,97 @@ max_bound = None
 # ___________________________________________________
 #  Principal Menu and interaction with the user.
 # ___________________________________________________
+
+def printMenu():
+
+    print("\n*******************************************\n")
+    print("Bienvenido:\n")
+
+    print("1- Long Portfolio")
+    print("2- Long Short Portfolio")
+    print("0- Salir")
+    print("\n*******************************************\n")
+
+def optionOne():
+
+    model, stock_return = Controller.longPortfolio(stock_info, expected_return, min_bound, max_bound)
+
+    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
+    printVar(vars)
+    if model.status == GRB.OPTIMAL:
+
+        variables = {v.varName : round(v.x, 4) for v in model.getVars()}
+        wight_stocks = list(variables.values())
+
+        print('\n-------------------------------\n')
+
+        print("La volatilidad del portafolio optimo es:" + " " + str(round(np.sqrt(model.objVal)*100,3))+"%")
+        print('El retorno anual del portafolio optimo es:' + ' ' + str(round(np.sum(wight_stocks*stock_return)*100,3)) + '%\n')
+        print('Los pesos son: \n')
+        for i, value in variables.items():
+            print('\t', i, value)
+        
+
+        print('\n-------------------------------\n')
+        
+        x= int(input("Desea ver la simulacion con GBM para el portafolio y el modelo GARCH de cada activo? Si: 1  No:0 "))
+        if x==1:
+            print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
+            print(GARCH())
+    else:
+
+        print('\n-------------------------------\n')
+        print("No optimal solution with those constrains.")
+        print('\n-------------------------------\n')
+
+
+def optionTwo():
+
+    model, stock_return = Controller.longShortPortfolio(stock_info, expected_return)
+
+    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
+    printVar(vars)
+
+    if model.status == GRB.OPTIMAL:
+
+        variables = {v.varName : round(v.x, 4) for v in model.getVars()}
+        wight_stocks = list(variables.values())
+
+        print('\n-------------------------------\n')
+
+        print("La volatilidad del portafolio optimo es:" + " " + str(round(np.sqrt(model.objVal)*100,3))+"%")
+        print('El retorno anual del portafolio optimo es:' + ' ' + str(round(np.sum(wight_stocks*stock_return)*100,3)) + '%\n')
+
+        print('Los pesos son: \n')
+        for i, value in variables.items():
+            print('\t', i, value)
+
+        print('\n-------------------------------\n')
+
+        x= int(input("Desea ver la simulacion con GBM para el portafolio y el modelo GARCH de cada activo? Si: 1  No:0 "))
+        if x==1:
+            print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
+            print(GARCH())
+
+    else:
+
+        print('\n-------------------------------\n')
+        print("No optimal solution with those constrains.")
+        print('\n-------------------------------\n')
+
+    
+# ___________________________________________________________
+#  Value at Risk:
+# ___________________________________________________________
+
+def printVar(vars):
+    print("-------------------------------------------------\n\n")
+    print("Daily value at risk (VaR) of the portfolio: ",round(vars,3), "%")
+
+
+# ___________________________________________________________
+#  Geometric Brownian Motion simulation and GARCH estimation:
+# ___________________________________________________________
 
 def GBM (miu,sigma,pesos): 
 
@@ -102,104 +186,23 @@ def GARCH():
     
 
 
-def printMenu():
-
-    print("\n*******************************************\n")
-    print("Bienvenido:\n")
-
-    print("1- Long Portfolio")
-    print("2- Long Short Portfolio")
-    print("0- Salir")
-    print("\n*******************************************\n")
-
-def optionOne():
-
-    model, stock_return = Controller.longPortfolio(stock_info, expected_return, min_bound, max_bound)
-
-    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
-    printVar(vars)
-    if model.status == GRB.OPTIMAL:
-
-        variables = {v.varName : round(v.x, 4) for v in model.getVars()}
-        wight_stocks = list(variables.values())
-
-        print('\n-------------------------------\n')
-
-        print("La volatilidad del portafolio optimo es:" + " " + str(round(np.sqrt(model.objVal)*100,3))+"%")
-        print('El retorno anual del portafolio optimo es:' + ' ' + str(round(np.sum(wight_stocks*stock_return)*100,3)) + '%\n')
-        print('Los pesos son: \n')
-        for i, value in variables.items():
-            print('\t', i, value)
-        
-
-        print('\n-------------------------------\n')
-        
-        x= int(input("Desea ver el GBM y modelo GARCH de cada activo? Si: 1  No:0 "))
-        if x==1:
-            print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
-            print(GARCH())
-    else:
-
-        print('\n-------------------------------\n')
-        print("No optimal solution with those constrains.")
-        print('\n-------------------------------\n')
-
-
-def optionTwo():
-
-    model, stock_return = Controller.longShortPortfolio(stock_info, expected_return)
-
-    vars = Controller.calculatePortfolioVar(stock_info,momentum_days)
-    printVar(vars)
-
-    if model.status == GRB.OPTIMAL:
-
-        variables = {v.varName : round(v.x, 4) for v in model.getVars()}
-        wight_stocks = list(variables.values())
-
-        print('\n-------------------------------\n')
-
-        print("La volatilidad del portafolio optimo es:" + " " + str(round(np.sqrt(model.objVal)*100,3))+"%")
-        print('El retorno anual del portafolio optimo es:' + ' ' + str(round(np.sum(wight_stocks*stock_return)*100,3)) + '%\n')
-
-        print('Los pesos son: \n')
-        for i, value in variables.items():
-            print('\t', i, value)
-
-        print('\n-------------------------------\n')
-
-        x= int(input("Desea ver el GBM y modelo GARCH de cada activo? Si: 1  No:0 "))
-        if x==1:
-            print(GBM(np.sum(wight_stocks*stock_return),np.sqrt(model.objVal),wight_stocks))
-            print(GARCH())
-
-    else:
-
-        print('\n-------------------------------\n')
-        print("No optimal solution with those constrains.")
-        print('\n-------------------------------\n')
-
-def printVar(vars):
-
-    print("VaR:",vars)
-
-
 # ___________________________________________________
 #  Main ~ Run
 # ___________________________________________________
 
 while True:
 
-    n= input("Desea cargar la informacion de Yahoo o del archivo generado 'Portafolio.csv'? 1: Yahoo, 0: Portafolio.csv. \n Si desea salir de la aplicacion escriba: EXIT\n>")
+    n= input("Desea cargar la informacion de Yahoo o del archivo generado 'Portafolio.csv'? 1: Yahoo, 0: Portafolio.csv. \n Si desea salir de la aplicacion escriba: EXIT\n> ")
 
-    if n =="EXIT":
+    if n =="EXIT" or n=="exit":
         sys.exit(0)
+    
     elif int(n)==1:
         generateCsv = True
         retrive_csv_info = False
-        n=int(input("Ingrese el número de activos que conforman el portafolio"))
+        n=int(input("Ingrese el número de activos que conforman el portafolio: "))
         for i in range(n):
-            ticker=str(input("Ingrese el ticker del activo "))
+            ticker=str(input("Ingrese el ticker del activo: "))
             assets.append(ticker)
     else:
         retrive_csv_info = True
@@ -207,7 +210,7 @@ while True:
 
     # ... Retrieve information of the assets from the specified source.
 
-    momentum=input("Ingrese cuantos años de información desea descargar, o Enter si desea el default de 2 annos.")
+    momentum=input("Ingrese cuantos años de información desea descargar, o Enter si desea el default de 2 annos. ")
     if momentum:
          momentum_days =int(momentum)*365
 
@@ -217,7 +220,7 @@ while True:
         stock_info.to_csv('Portafolio.csv', sep=';', index=False)
 
     printMenu() 
-    inputs = input('Seleccione una opción para continuar\n>')
+    inputs = input('Seleccione una opción para continuar\n> ')
 
     if int(inputs[0]) == 1:
         executiontime = timeit.timeit(optionOne, number=1)
@@ -225,9 +228,9 @@ while True:
     elif int(inputs[0]) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
-
-
     else:
         sys.exit(0)
+    
+    assets = []
         
 

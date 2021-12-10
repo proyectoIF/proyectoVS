@@ -13,20 +13,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Contribution:
- *      
- *      Santiago Bobadilla (s.bobadilla@uniandes.edu.co)
- *      Daniel Zea (d.zea@uniandes.edu.co)
- *      Juan A. Jaramillo (ja.jaramillop@uniandes.edu.co)
- *      Andrés F. Vergara (af.vergarar@uniandes.edu.co)
- *
  """
 
 import gurobipy as gp
 from gurobipy import GRB, quicksum
 import numpy as np
-
 
 # ___________________________________________________
 #  Long Portfolio with special constrains

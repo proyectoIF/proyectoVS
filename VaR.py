@@ -13,6 +13,7 @@ Pasos para la implementacion del Value at Risk del portafolio de activos:
     3.2. Realizar la siguiente operacion matricial: corr_matrix = sigmas * var-covar * sigmas
 4. Calcular el DVAR^2 con la siguiente operacion equivalente en Excel: MMULT(transponer(vectorVaRs);MMULT(corr_matrix;vectorVaRs))
 5. calcular sqrt(DVAR^2) y este ya es el resultado buscado para el Daily Value at Risk del portafolio.
+NOTA: La respuesta queda expresada en porcentaje.
 
 '''
 

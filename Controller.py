@@ -15,17 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contribution:
- *      
- *      Santiago Bobadilla (s.bobadilla@uniandes.edu.co)
- *      Daniel Zea (d.zea@uniandes.edu.co)
- *      Juan A. Jaramillo (ja.jaramillop@uniandes.edu.co)
- *      Andrés F. Vergara (af.vergarar@uniandes.edu.co)
  *
  """
 import VaR as var
 import Stock_Info as info
 import Min_Risk_Long_Portfolio as min_risk
-import GBM as geometrico
+# import GBM as geometrico
 
 
 # ___________________________________________________
@@ -81,6 +76,5 @@ def calculatePortfolioVar(stock_info, momentum):
 
     return var.portfolioVaR(stock_info,momentum)
 
-def GBM (num_dias,miu,sigma,s0):
-    
-    return geometrico.model (num_dias,miu,sigma,s0)
+# def GBM (num_dias,miu,sigma,s0):
+#     return geometrico.model (num_dias,miu,sigma,s0)
